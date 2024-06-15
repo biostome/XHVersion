@@ -128,8 +128,8 @@
             if([self isNewVersion:version])//新版本
             {
                 if(newVersion) newVersion(appInfo);
+                return;
             }
-            return;
         }
         if(newVersion) newVersion(nil);
     } failure:^(NSError *error) {
