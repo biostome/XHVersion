@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "XHAppInfo.h"
 
-typedef void(^NewVersionBlock)(XHAppInfo *appInfo);
+typedef void(^NewVersionBlock)(XHAppInfo * _Nullable appInfo);
+typedef void(^NewVersionFailureBlock)(NSError * _Nullable error);
 
 @interface XHVersion : NSObject
 
@@ -23,6 +24,13 @@ typedef void(^NewVersionBlock)(XHAppInfo *appInfo);
  *
  *  @param newVersion 新版本信息回调
  */
-+(void)checkNewVersionAndCustomAlert:(NewVersionBlock)newVersion;
++(void)checkNewVersionAndCustomAlert:(NewVersionBlock _Nullable )newVersion;
 
+
+/**
+ *  检测新版本(自定义提示框)
+ *
+ *  @param newVersion 新版本信息回调
+ */
++ (void)checkNewVersionAndCustomAlert:(NewVersionBlock _Nullable)newVersion failure:(NewVersionFailureBlock _Nullable)failue;
 @end

@@ -27,6 +27,10 @@
     [[XHVersion shardManger] checkNewVersionAndCustomAlert:newVersion];
 }
 
++ (void)checkNewVersionAndCustomAlert:(NewVersionBlock _Nullable)newVersion failure:(NewVersionFailureBlock _Nullable)failue{
+    [[XHVersion shardManger] checkNewVersionAndCustomAlert:newVersion failure:failue];
+}
+
 #pragma mark - private
 
 +(XHVersion *)shardManger{
@@ -108,6 +112,29 @@
         
     }];
 
+}
+
+- (void)checkNewVersionAndCustomAlert:(NewVersionBlock _Nullable)newVersion failure:(NewVersionFailureBlock _Nullable)failue{
+    
+    [XHVersionRequest xh_versionRequestSuccess:^(NSDictionary *responseDict) {
+        
+        NSInteger resultCount = [responseDict[@"resultCount"] integerValue];
+        if(resultCount==1)
+        {
+            NSArray *resultArray = responseDict[@"results"];
+            NSDictionary *result = resultArray.firstObject;
+            XHAppInfo *appInfo = [[XHAppInfo alloc] initWithResult:result];
+            NSString *version = appInfo.version;
+            if([self isNewVersion:version])//新版本
+            {
+                if(newVersion) newVersion(appInfo);
+            }
+            return;
+        }
+        if(newVersion) newVersion(nil);
+    } failure:^(NSError *error) {
+        if (failue) failue(error);
+    }];
 }
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
